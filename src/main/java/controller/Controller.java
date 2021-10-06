@@ -1,8 +1,6 @@
 package controller;
 
 import java.sql.SQLException;
-import java.util.List;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,12 +21,12 @@ public class Controller {
 		return dbController.registriereStudent(student) ? "Student angelegt" : "Student abgewiesen";
 	}	
 	
-	/*@GetMapping("/")
-	public List<String> erhalteFriendOptions(@RequestBody FreundesAnfrage anfrage)
+	@GetMapping("/")
+	public String erhalteFriendOptions(@RequestBody FreundesAnfrage anfrage) throws ClassNotFoundException, SQLException
 	{
 		DbController dbController = new DbController();
-		List<String> studenten = dbController.bekommeStudenten(anfrage);
+		String studenten = dbController.bekommeStudenten(anfrage);
 		return studenten;		
-	}*/
+	}
 	
 }
