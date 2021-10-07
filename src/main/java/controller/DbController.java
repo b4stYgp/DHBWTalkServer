@@ -22,6 +22,12 @@ public class DbController {
 	{		
 	}
 	
+	
+	private void baueVerbindung() throws SQLException, ClassNotFoundException
+	{		
+			Class.forName("com.mysql.cj.jdbc.Driver");		
+			connec = DriverManager.getConnection(url+datenbank,user,password);		
+	}
 
 	public boolean registriereStudent(Student student) throws SQLException, ClassNotFoundException
 	{
@@ -35,7 +41,7 @@ public class DbController {
 				+ "')";
 		stmt = connec.createStatement();
 		int ergebnis = stmt.executeUpdate(query);
-		stmt.close();
+		stmt.close();		
 		connec.close();
 		if(ergebnis == 1) return true;
 		else return false;
@@ -43,36 +49,21 @@ public class DbController {
 
 	public String bekommeStudenten(FreundesAnfrage anfrage) throws ClassNotFoundException, SQLException {		
 		baueVerbindung();
-		vorbereitenFreundeQuery(anfrage);
+		vorbereitenFreundesQuery(anfrage);
 		stmt = connec.createStatement();
 		rs = stmt.executeQuery(query);
 		String studentenJSON = vorbereitenStudentenListe();
 		stmt.close();
+		rs.close();
 		connec.close();
 		return studentenJSON;
 	}
 	
-	private void baueVerbindung() throws SQLException, ClassNotFoundException
-	{
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			connec = DriverManager.getConnection(url+datenbank,user,password);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	
-	private void vorbereitenFreundeQuery(FreundesAnfrage anfrage)
+	private void vorbereitenFreundesQuery(FreundesAnfrage anfrage)
 	{
 		boolean hatVorgaenger = false;
-		query = "SELECT `name`, `surname`, `gender`, `courseID`, `matrikelnummer` FROM `student` WHERE ";
+		query = "SELECT `id`, `name`, `surname`, `gender`, `courseID`, `matrikelnummer` FROM `student` WHERE ";
+		
 		switch(anfrage.getName())
 		{
 		case "null" : break;
@@ -84,11 +75,13 @@ public class DbController {
 		case "null" : break;
 		default : if(hatVorgaenger) {query = query.concat(" AND ");} query = query.concat("`surname` = \"" + anfrage.getSurname() + "\""); break;
 		}
+		
 		switch(anfrage.getCourseID())
 		{
 		case "null" : break;
 		default : if(hatVorgaenger) {query = query.concat(" AND ");} query = query.concat("`courseID` = \"" + anfrage.getCourseID() + "\""); break;
 		}
+		
 		System.out.println(query);
 	}
 	
@@ -104,12 +97,51 @@ public class DbController {
 			studenten = studenten.concat("\"" + rs.getString("surname")+ "\",");
 			studenten = studenten.concat("\"courseID\":");
 			studenten = studenten.concat("\"" + rs.getString("courseID")+ "\"");
-			studenten = studenten.concat("},");					
+			studenten = studenten.concat("},");			
 		}
 		studenten = studenten.substring(0, studenten.length()-1);
-		studenten = studenten.concat("]");
+		studenten = studenten.concat("]");		
 		System.out.println(studenten);
 		return studenten;
 	}
+
+	
+	public boolean anfrageFreundschaft(FreundesAnfrage anfrage, String matrikelnummer) throws ClassNotFoundException, SQLException {
+		baueVerbindung();
+		vorbereitenFreundesQuery(anfrage);
+		stmt = connec.createStatement();
+		rs = stmt.executeQuery(query);
+		boolean bool = speichereFreundschaftsAnfrage(matrikelnummer);
+		stmt.close();		
+		connec.close();
+		return bool;
+	}	
+	
+	private boolean speichereFreundschaftsAnfrage(String matrikelnummer) throws SQLException {
+		if(rs.next())
+		{
+			String freundId = rs.getString("id");
+			rs.close();		
+			query = "SELECT `id` FROM `student` WHERE `matrikelnummer` = \"" + matrikelnummer + "\"";
+			stmt = connec.createStatement();
+			rs = stmt.executeQuery(query);
+			if(rs.next())
+			{
+				String studentId = rs.getString("id");
+				rs.close();		
+				query = "INSERT INTO `friendlist`(`Student1_Id`, `Student2_Id`, `isFriend`) VALUES ('"
+						+ studentId + "','" 
+						+ freundId +  "','"
+						+ 0 + "')";
+				int ergebnis = stmt.executeUpdate(query);		
+				if(ergebnis == 1) return true;
+				else return false;
+			}
+			else return false;
+		}
+		else return false;
+				
+	}
+
 	 
 }
