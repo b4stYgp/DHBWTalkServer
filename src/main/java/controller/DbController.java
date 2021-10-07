@@ -5,6 +5,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
 import models.FreundesAnfrage;
 import models.Student;
 
@@ -139,9 +142,43 @@ public class DbController {
 			}
 			else return false;
 		}
-		else return false;
-				
+		else return false;				
 	}
+	
+	public String bekommeOffeneFreundschaftsanfragen(String matrikelnummer) throws ClassNotFoundException, SQLException {
+		//bekomme Id des Studenten welccher überpfrüfen will ob Freundesanfragen vorhanden sind
+		baueVerbindung();
+		String student2Id = bekommeStudent2Id(matrikelnummer);		
+		//
+		
+		stmt.close();
+		connec.close();
+		return null;
+	}
+
+
+	private String bekommeStudent2Id(String matrikelnummer) throws SQLException {
+		query = "SELECT `Student1_Id` FROM `student` WHERE `matrikelnummer` = \"" + matrikelnummer + "\"";
+		stmt = connec.createStatement();
+		rs = stmt.executeQuery(query);		
+		if(rs.next())
+		{
+			return rs.getString("Student1_Id");			
+		}
+		else return "kein Student mit der Matrikelnummer gefunden";
+	}
+
+
+
+
+
+	public boolean bestaetigeFreundschaftsAnfrage(FreundesAnfrage anfrage, String matrikelnummer) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+
 
 	 
 }

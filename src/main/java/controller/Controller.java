@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,7 +13,7 @@ import models.FreundesAnfrage;
 import models.Student;
 
 @RestController
-@RequestMapping("/student")
+@RequestMapping("/students")
 public class Controller {
 	
 	@PostMapping("/")
@@ -30,11 +31,25 @@ public class Controller {
 		return studenten;		
 	}
 	
-	@PostMapping("/{matrikelnummer}")
+	@GetMapping("/{matrikelnummer}/offeneFreunde")
+	public String bekommeOffeneFreundschaftsanfragen(@PathVariable ("matrikelnummer") String matrikelnummer) throws ClassNotFoundException, SQLException
+	{
+		DbController dbController = new DbController();
+		return dbController.bekommeOffeneFreundschaftsanfragen(matrikelnummer);
+	}
+	
+	@PostMapping("/{matrikelnummer}/offeneFreunde")
 	public String anfrageFreundschaft(@RequestBody FreundesAnfrage anfrage,  @PathVariable("matrikelnummer") String matrikelnummer ) throws ClassNotFoundException, SQLException
 	{
 		DbController dbController = new DbController();		
 		return dbController.anfrageFreundschaft(anfrage, matrikelnummer) ? "Freundesanfrage gesendet" : "Freundschaftsanfrage abgelehnt, weil schon gesendet";	
+	}
+	
+	@PutMapping("/{matrikelnummer}/offeneFreunde")
+	public String bestaetigeFreundschaftsAnfrage(@RequestBody FreundesAnfrage anfrage, @PathVariable("matrikelnummer") String matrikelnummer)
+	{
+		DbController dbController = new DbController();
+		return dbController.bestaetigeFreundschaftsAnfrage(anfrage, matrikelnummer) ? "Freundschaft bestaetigt" : "Freundschaft abegelehnt" ;		
 	}
 	
 }
