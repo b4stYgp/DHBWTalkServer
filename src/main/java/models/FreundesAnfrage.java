@@ -6,6 +6,13 @@ public class FreundesAnfrage {
 	private String courseID;
 	
 	
+	public FreundesAnfrage(String name, String surname, String courseID)
+	{
+		setName(name);
+		setSurname(surname);
+		setCourseID(courseID);
+	}
+	
 	public String getName() {
 		return name;
 	}	

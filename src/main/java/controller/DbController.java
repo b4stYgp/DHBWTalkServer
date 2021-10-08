@@ -50,8 +50,9 @@ public class DbController {
 		else return false;
 	}
 
-	public String bekommeStudenten(FreundesAnfrage anfrage) throws ClassNotFoundException, SQLException {		
+	public String bekommeStudenten(String name, String surname, String courseID) throws ClassNotFoundException, SQLException {		
 		baueVerbindung();
+		FreundesAnfrage anfrage = new FreundesAnfrage(name, surname, courseID);
 		vorbereitenFreundesQuery(anfrage);
 		stmt = connec.createStatement();
 		rs = stmt.executeQuery(query);
