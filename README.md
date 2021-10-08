@@ -23,7 +23,7 @@ Post: http://localhost:8080/students/{matrikelnummer}/freunde Body(FreundesAnfra
 Mögliche Antworten: "Freundesanfrage gesendet" oder "Freundschaftsanfrage abgelehnt"
 
 Um offene Freundschaftsanfragen abzufragen:
-Get: http://localhost:8080/students/{matrikelnummer}/freunde kein Body
+Get: http://localhost:8080/students/{matrikelnummer}/offenefreunde kein Body
 Mögliche Antworten: [{"name":"Testname" , "surname":"Testnachname" , "courseID":"Testkurs"},]
 
 Um eine Freundschaft zu bestätigen:
