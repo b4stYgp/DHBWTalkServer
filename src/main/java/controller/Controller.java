@@ -31,21 +31,21 @@ public class Controller {
 		return studenten;		
 	}
 	
-	@GetMapping("/{matrikelnummer}/offenefreunde")
+	@GetMapping("/{matrikelnummer}/freunde")
 	public String bekommeOffeneFreundschaftsanfragen(@PathVariable ("matrikelnummer") String matrikelnummer) throws ClassNotFoundException, SQLException
 	{
 		DbController dbController = new DbController();
 		return dbController.bekommeOffeneFreundschaftsanfragen(matrikelnummer);
 	}
 	
-	@PostMapping("/{matrikelnummer}/offenefreunde")
+	@PostMapping("/{matrikelnummer}/freunde")
 	public String anfrageFreundschaft(@RequestBody FreundesAnfrage anfrage,  @PathVariable("matrikelnummer") String matrikelnummer ) throws ClassNotFoundException, SQLException
 	{
 		DbController dbController = new DbController();		
 		return dbController.anfrageFreundschaft(anfrage, matrikelnummer) ? "Freundesanfrage gesendet" : "Freundschaftsanfrage abgelehnt, weil schon gesendet";	
 	}
 	
-	@PutMapping("/{matrikelnummer}/offenefreunde")
+	@PutMapping("/{matrikelnummer}/freunde")
 	public String bestaetigeFreundschaftsAnfrage(@RequestBody FreundesAnfrage anfrage, @PathVariable("matrikelnummer") String matrikelnummer) throws ClassNotFoundException, SQLException
 	{
 		DbController dbController = new DbController();
