@@ -30,3 +30,7 @@ Um eine Freundschaft zu bestätigen:
 Put: http://localhost:8080/students/{matrikelnummer}/freunde Body(FreundesAnfrage(des zu bestätigenden Studenten)) ->
 {"name":"Testname" , "surname":"Testnachname" , "courseID":"Testkurs"} [Body muss komplett befüllt sein, die hierfür notwendigen Informationen sind aus der offenen Freundschaftsanfrage zu entnehmen]
 Mögliche Antworten: "Freundschaft bestaetigt" oder "Freundschaft abegelehnt"
+
+Um bestehende Freunde abzufragen:
+Get: http://localhost:8080/students/{matrikelnummer}/freunde kein Body
+Mögliche Antworten: "keine Freunde" oder [{"name":"Testname" , "surname":"TestNachname" , "courseID";"Testkurs"},]
