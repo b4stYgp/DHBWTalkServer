@@ -233,7 +233,7 @@ public class DbController {
 		List<String> ids = new ArrayList<String>();
 		while(rs.next())
 		{
-			if(rs.getString("Student1_Id") == "id") ids.add(rs.getString("Student2_Id"));
+			if(rs.getString("Student1_Id") == id) ids.add(rs.getString("Student2_Id"));
 			else ids.add(rs.getString("Student1_id"));
 		}
 		erstelleBekommeFreundeQuery(ids);		
@@ -246,10 +246,10 @@ public class DbController {
 
 
 	private void erstelleBekommeFreundeQuery(List<String> ids) {
-		query = "SELECT `name`, `surname`, `courseID` FROM `student` WHERE `id` = ";
+		query = "SELECT `name`, `surname`, `courseID` FROM `student` WHERE ";
 		for(int i=0; i < ids.size();i++)
 		{
-			query = query.concat("\"" + ids.get(i) + "\"");
+			query = query.concat("`id` = \"" + ids.get(i) + "\"");
 			query = query.concat(" OR ");
 		}
 		query = query.substring(0, query.length()-4);
