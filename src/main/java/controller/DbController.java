@@ -250,7 +250,7 @@ public class DbController {
 		for(int i=0; i < ids.size(); i++)
 		{
 			query = query.concat("`id` = \"" + ids.get(i) + "\"");
-			query = query.concat(" OR ");
+			query = query.concat(" OR ");			
 		}
 		query = query.substring(0, query.length()-4);
 		System.out.println(query);
