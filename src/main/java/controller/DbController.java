@@ -247,7 +247,7 @@ public class DbController {
 
 	private void erstelleBekommeFreundeQuery(List<String> ids) {
 		query = "SELECT `name`, `surname`, `courseID` FROM `student` WHERE ";
-		for(int i=0; i < ids.size();i++)
+		for(int i=0; i < ids.size(); i++)
 		{
 			query = query.concat("`id` = \"" + ids.get(i) + "\"");
 			query = query.concat(" OR ");
