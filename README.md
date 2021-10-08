@@ -13,8 +13,8 @@ Post: http://localhost:8080/students/ Body(Student) ->
 Mögliche Antworten: "Student angelegt" oder "Student abgewiesen"
 
 Um potentielle Freunde anzufragen:
-Get: http://localhost:8080/students/ Body(FreundesAnfrage(abzufrageneder Student)) -> 
-{"name":"null" , "surname":"null" , "courseID":"TestKurs"} [Body muss nicht komplett befüllt sein, aber mindestens ein Eintrag muss vorhanden sein]
+Get: http://localhost:8080/students/{name}/{surname}/{courseID} kein Body
+{"name":"null" , "surname":"null" , "courseID":"TestKurs"} [Die Path Variable müssen alle befüllt sein, bei nicht Eintrag in GUI bei der suche müssen die nicht befülten Felder mit dem String "null" befüllt sein. (Beispiel /students/null/testNachname/null)]
 Beispiel Antwort: [{"name":"Testname" , "surname":"Testnachname" , "courseID":"TestKurs"},]
 
 Um eine Freundschaftsanfrage abzusenden:
