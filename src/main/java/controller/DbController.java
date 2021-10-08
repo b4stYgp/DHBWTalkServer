@@ -149,32 +149,61 @@ public class DbController {
 		//bekomme Id des Studenten welccher überpfrüfen will ob Freundesanfragen vorhanden sind
 		baueVerbindung();
 		String student2Id = bekommeStudent2Id(matrikelnummer);		
-		//
-		
+		//Mit dieser Id wird auf der FriendTabelle abgefragt ob Studenten anfragen gestellt haben
+		if(student2Id == "kein Student mit der Matrikelnummer gefunden") return student2Id;
+		stmt.close();
+		String freundesAnfragen = leseFreundesAnfragen(student2Id);
 		stmt.close();
 		connec.close();
-		return null;
+		return freundesAnfragen;
 	}
 
 
 	private String bekommeStudent2Id(String matrikelnummer) throws SQLException {
-		query = "SELECT `Student1_Id` FROM `student` WHERE `matrikelnummer` = \"" + matrikelnummer + "\"";
+		query = "SELECT `Id` FROM `student` WHERE `matrikelnummer` = \"" + matrikelnummer + "\"";
 		stmt = connec.createStatement();
 		rs = stmt.executeQuery(query);		
 		if(rs.next())
 		{
-			return rs.getString("Student1_Id");			
+			return rs.getString("Id");			
 		}
 		else return "kein Student mit der Matrikelnummer gefunden";
 	}
 
+	private String leseFreundesAnfragen(String student2Id) throws SQLException {
+		query = "SELECT `Student1_Id` FROM `friendlist` WHERE `Student2_Id` = "
+				+ student2Id + " AND `isFriend` = 0";
+		stmt = connec.createStatement();
+		rs = stmt.executeQuery(query);  //Liste an StudentenId die auf Freundschaftsanfrage warten
+		List<String> studentenIds = new ArrayList<String>();		
+		while(rs.next())
+		{
+			studentenIds.add(rs.getString("Student1_Id"));
+		}
+		
+		query = "SELECT `name`, `surname`, `courseID` FROM `student` WHERE ";
+		
+		for(int i=0; i < studentenIds.size();i++)
+		{
+			query = query.concat("`id` = "+ studentenIds.get(i));
+			query = query.concat(" OR ");
+		}
+		query = query.substring(0, query.length()-4);
+		System.out.println(query);
+		rs = stmt.executeQuery(query);
+		return vorbereitenStudentenListe();		
+	}
 
 
-
-
-	public boolean bestaetigeFreundschaftsAnfrage(FreundesAnfrage anfrage, String matrikelnummer) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean bestaetigeFreundschaftsAnfrage(FreundesAnfrage anfrage, String matrikelnummer) throws ClassNotFoundException, SQLException {
+		query = "UPDATE `friendlist` SET `isFriend`= 1 WHERE `Student2_Id` = (SELECT `id` FROM `student` WHERE `matrikelnummer` = \"" + matrikelnummer + "\""
+				+ ") AND `Student1_Id` = (SELECT `id` FROM `student` WHERE `name` = \"" + anfrage.getName() + "\""
+				+ " AND `surname` = \"" + anfrage.getSurname() + "\"  AND `courseID` = \"" + anfrage.getCourseID() + "\")";
+		baueVerbindung();
+		stmt = connec.createStatement();
+		int reihen = stmt.executeUpdate(query);
+		if(reihen == 1)return true;
+		else return false;
 	}
 
 
