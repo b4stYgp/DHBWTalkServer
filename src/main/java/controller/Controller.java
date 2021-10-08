@@ -31,6 +31,13 @@ public class Controller {
 		return studenten;		
 	}
 	
+	@GetMapping("/{matrikelnummer}")
+	public String login(@PathVariable ("matrikelnummer") String matrikelnummer) throws ClassNotFoundException, SQLException
+	{
+		DbController dbController = new DbController();
+		return dbController.login(matrikelnummer) ? "true" : "false";		
+	}
+	
 	@PostMapping("/{matrikelnummer}/freunde")
 	public String anfrageFreundschaft(@RequestBody FreundesAnfrage anfrage,  @PathVariable("matrikelnummer") String matrikelnummer ) throws ClassNotFoundException, SQLException
 	{
@@ -39,11 +46,18 @@ public class Controller {
 	}
 	
 	
-	@GetMapping("/{matrikelnummer}/freunde")
+	@GetMapping("/{matrikelnummer}/offenefreunde")
 	public String bekommeOffeneFreundschaftsanfragen(@PathVariable ("matrikelnummer") String matrikelnummer) throws ClassNotFoundException, SQLException
 	{
 		DbController dbController = new DbController();
 		return dbController.bekommeOffeneFreundschaftsanfragen(matrikelnummer);
+	}
+	
+	@GetMapping("/{matrikelnummer}/freunde")
+	public String bekommeFreunde(@PathVariable ("matrikelnummer") String matrikelnummer) throws ClassNotFoundException, SQLException
+	{
+		DbController dbController = new DbController();
+		return dbController.bekommeFreunde(matrikelnummer);
 	}
 	
 

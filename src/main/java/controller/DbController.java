@@ -207,6 +207,56 @@ public class DbController {
 	}
 
 
+	public boolean login(String matrikelnummer) throws ClassNotFoundException, SQLException {
+		query = "SELECT `matrikelnummer` FROM `student` WHERE `matrikelnummer` = \"" + matrikelnummer + "\"";
+		baueVerbindung();
+		stmt = connec.createStatement();
+		rs = stmt.executeQuery(query);
+		if(rs.next()) return true;
+		else return false;
+	}
+
+
+	public String bekommeFreunde(String matrikelnummer) throws ClassNotFoundException, SQLException {
+		query = "SELECT `id` FROM `student` WHERE `matrikelnummer` = \"" + matrikelnummer + "\"";
+		baueVerbindung();
+		stmt = connec.createStatement();
+		rs = stmt.executeQuery(query);
+		String id = "";
+		if(rs.next())
+		{
+			id = rs.getString("id");
+			query = "SELECT `Student1_Id`, `Student2_Id` FROM `friendlist` WHERE `Student1_Id` = \"" + id + "\" OR `Student2_Id` = \"" + id + "\" AND `isFriend` = 1";
+		}
+		else return "keine Freunde";
+		rs = stmt.executeQuery(query);
+		List<String> ids = new ArrayList<String>();
+		while(rs.next())
+		{
+			if(rs.getString("Student1_Id") == "id") ids.add(rs.getString("Student2_Id"));
+			else ids.add(rs.getString("Student1_id"));
+		}
+		erstelleBekommeFreundeQuery(ids);		
+		rs = stmt.executeQuery(query);		
+		String freunde = vorbereitenStudentenListe();
+		stmt.close();
+		connec.close();
+		return freunde;
+	}
+
+
+	private void erstelleBekommeFreundeQuery(List<String> ids) {
+		query = "SELECT `name`, `surname`, `courseID` FROM `student` WHERE `id` = ";
+		for(int i=0; i < ids.size();i++)
+		{
+			query = query.concat("\"" + ids.get(i) + "\"");
+			query = query.concat(" OR ");
+		}
+		query = query.substring(0, query.length()-4);
+		System.out.println(query);
+	}
+
+
 
 
 	 
