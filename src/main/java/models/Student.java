@@ -6,6 +6,7 @@ public class Student {
 	private String courseID;
 	private String gender;
 	private String id;
+	private String passwort;
 	
 	
 	public String getName() {
@@ -46,6 +47,14 @@ public class Student {
 	
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getPasswort() {
+		return passwort;
+	}
+
+	public void setPasswort(String passwort) {
+		this.passwort = passwort;
 	}
 	
 }
