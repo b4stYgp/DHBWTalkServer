@@ -35,12 +35,13 @@ public class DbController {
 	public boolean registriereStudent(Student student) throws SQLException, ClassNotFoundException
 	{
 		baueVerbindung();
-		query = "INSERT INTO `student`(`name`, `surname`, `gender`, `courseID`, `matrikelnummer` ) VALUES ('"				
+		query = "INSERT INTO `student`(`name`, `surname`, `gender`, `courseID`, `matrikelnummer`, `passwort` ) VALUES ('"				
 				+  student.getName()
 				+ "','" + student.getSurname() 
 				+ "','" + student.getGender() 
 				+ "','" + student.getCourseID() 
 				+ "','" + student.getId()
+				+ "','" + student.getPasswort()
 				+ "')";
 		stmt = connec.createStatement();
 		int ergebnis = stmt.executeUpdate(query);
@@ -48,6 +49,16 @@ public class DbController {
 		connec.close();
 		if(ergebnis == 1) return true;
 		else return false;
+	}
+	
+	public String anmelden(String matrikelnummer, String passwort) throws ClassNotFoundException, SQLException
+	{
+		query = "SELECT `id` FROM `student` WHERE `matrikelnummer` = \"" + matrikelnummer + "\" AND " + "`passwort` = \"" + passwort + "\"";
+		baueVerbindung();
+		stmt = connec.createStatement();
+		rs = stmt.executeQuery(query);
+		if(rs.first()) return "true";
+		else return "false";
 	}
 
 	public String bekommeStudenten(String name, String surname, String courseID) throws ClassNotFoundException, SQLException {		
@@ -257,6 +268,9 @@ public class DbController {
 		query = query.substring(0, query.length()-4);
 		System.out.println(query);
 	}
+
+
+
 
 
 
