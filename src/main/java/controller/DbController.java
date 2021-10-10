@@ -228,13 +228,14 @@ public class DbController {
 		{
 			id = rs.getString("id");
 			query = "SELECT `Student1_Id`, `Student2_Id` FROM `friendlist` WHERE `Student1_Id` = \"" + id + "\" OR `Student2_Id` = \"" + id + "\" AND `isFriend` = 1";
+			System.out.println(query);
 		}
 		else return "keine Freunde";
 		rs = stmt.executeQuery(query);
 		List<String> ids = new ArrayList<String>();
 		while(rs.next())
-		{
-			if(rs.getString("Student1_Id") == id) ids.add(rs.getString("Student2_Id"));
+		{		
+			if(id.equals(rs.getString("Student1_Id"))) ids.add(rs.getString("Student2_Id"));
 			else ids.add(rs.getString("Student1_id"));
 		}
 		erstelleBekommeFreundeQuery(ids);		
