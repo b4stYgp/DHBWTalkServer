@@ -151,7 +151,7 @@ public class DbController {
 		baueVerbindung();
 		String student2Id = bekommeStudent2Id(matrikelnummer);		
 		//Mit dieser Id wird auf der FriendTabelle abgefragt ob Studenten anfragen gestellt haben
-		if(student2Id == "kein Student mit der Matrikelnummer gefunden") return student2Id;
+		if(student2Id.equals("kein Student mit der Matrikelnummer gefunden")) return student2Id;
 		stmt.close();
 		String freundesAnfragen = leseFreundesAnfragen(student2Id);
 		stmt.close();
