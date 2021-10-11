@@ -53,11 +53,12 @@ public class DbController {
 	
 	public String anmelden(String matrikelnummer, String passwort) throws ClassNotFoundException, SQLException
 	{
-		query = "SELECT `id` FROM `student` WHERE `matrikelnummer` = \"" + matrikelnummer + "\" AND " + "`passwort` = \"" + passwort + "\"";
+		query = "SELECT `id` FROM `student` WHERE `matrikelnummer` = \"" + matrikelnummer + "\" AND `passwort` = \"" + passwort + "\"";
+		System.out.println(query);
 		baueVerbindung();
 		stmt = connec.createStatement();
 		rs = stmt.executeQuery(query);
-		if(rs.first()) return "true";
+		if(rs.next()) return "true";
 		else return "false";
 	}
 

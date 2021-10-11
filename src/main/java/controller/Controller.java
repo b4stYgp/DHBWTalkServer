@@ -23,7 +23,7 @@ public class Controller {
 		return dbController.registriereStudent(student) ? "Student angelegt" : "Student abgewiesen";
 	}
 	
-	@GetMapping("/students/{matrikelnummer}/{passwort}")
+	@GetMapping("/{matrikelnummer}/{passwort}")
 	public String anmeldenStudent(@PathVariable ("matrikelnummer") String matrikelnummer, @PathVariable ("passwort") String passwort) throws ClassNotFoundException, SQLException
 	{
 		DbController dbController = new DbController();
@@ -38,12 +38,12 @@ public class Controller {
 		return studenten;		
 	}
 	
-	@GetMapping("/{matrikelnummer}/{passwort}")
+	/*@GetMapping("/{matrikelnummer}/{passwort}")
 	public String login(@PathVariable ("matrikelnummer") String matrikelnummer, @PathVariable("passwort") String passwort) throws ClassNotFoundException, SQLException
 	{
 		DbController dbController = new DbController();
 		return dbController.login(matrikelnummer,passwort) ? "true" : "false";		
-	}
+	}*/
 	
 	@PostMapping("/{matrikelnummer}/freunde")
 	public String anfrageFreundschaft(@RequestBody FreundesAnfrage anfrage,  @PathVariable("matrikelnummer") String matrikelnummer ) throws ClassNotFoundException, SQLException
