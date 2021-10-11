@@ -38,11 +38,11 @@ public class Controller {
 		return studenten;		
 	}
 	
-	@GetMapping("/{matrikelnummer}")
-	public String login(@PathVariable ("matrikelnummer") String matrikelnummer) throws ClassNotFoundException, SQLException
+	@GetMapping("/{matrikelnummer}/{passwort}")
+	public String login(@PathVariable ("matrikelnummer") String matrikelnummer, @PathVariable("passwort") String passwort) throws ClassNotFoundException, SQLException
 	{
 		DbController dbController = new DbController();
-		return dbController.login(matrikelnummer) ? "true" : "false";		
+		return dbController.login(matrikelnummer,passwort) ? "true" : "false";		
 	}
 	
 	@PostMapping("/{matrikelnummer}/freunde")

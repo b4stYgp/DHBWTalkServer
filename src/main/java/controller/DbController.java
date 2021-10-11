@@ -219,8 +219,8 @@ public class DbController {
 	}
 
 
-	public boolean login(String matrikelnummer) throws ClassNotFoundException, SQLException {
-		query = "SELECT `matrikelnummer` FROM `student` WHERE `matrikelnummer` = \"" + matrikelnummer + "\"";
+	public boolean login(String matrikelnummer, String passwort) throws ClassNotFoundException, SQLException {
+		query = "SELECT `matrikelnummer` FROM `student` WHERE `matrikelnummer` = \"" + matrikelnummer + "\" AND `passwort` \"" + passwort + "\"" ;
 		baueVerbindung();
 		stmt = connec.createStatement();
 		rs = stmt.executeQuery(query);
