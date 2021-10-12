@@ -54,7 +54,6 @@ public class DbController {
 	public String anmelden(String matrikelnummer, String passwort) throws ClassNotFoundException, SQLException
 	{
 		query = "SELECT `id` FROM `student` WHERE `matrikelnummer` = \"" + matrikelnummer + "\" AND `passwort` = \"" + passwort + "\"";
-		System.out.println(query);
 		baueVerbindung();
 		stmt = connec.createStatement();
 		rs = stmt.executeQuery(query);
@@ -96,15 +95,13 @@ public class DbController {
 		{
 		case "null" : break;
 		default : if(hatVorgaenger) {query = query.concat(" AND ");} query = query.concat("`courseID` = \"" + anfrage.getCourseID() + "\""); break;
-		}
-		
-		System.out.println(query);
+		}		
 	}
 	
 	private String vorbereitenStudentenListe() throws SQLException
 	{
 		String studenten = "[";
-		while(rs.next())
+		while(rs.next())			
 		{
 			studenten = studenten.concat("{");
 			studenten = studenten.concat("\"name\":");
@@ -116,8 +113,7 @@ public class DbController {
 			studenten = studenten.concat("},");			
 		}
 		studenten = studenten.substring(0, studenten.length()-1);
-		studenten = studenten.concat("]");		
-		System.out.println(studenten);
+		studenten = studenten.concat("]");			
 		return studenten;
 	}
 
@@ -201,8 +197,7 @@ public class DbController {
 			query = query.concat("`id` = "+ studentenIds.get(i));
 			query = query.concat(" OR ");
 		}
-		query = query.substring(0, query.length()-4);
-		System.out.println(query);
+		query = query.substring(0, query.length()-4);		
 		rs = stmt.executeQuery(query);
 		return vorbereitenStudentenListe();		
 	}
@@ -236,11 +231,11 @@ public class DbController {
 		stmt = connec.createStatement();
 		rs = stmt.executeQuery(query);
 		String id = "";
+		String freunde = "";
 		if(rs.next())
 		{
 			id = rs.getString("id");
-			query = "SELECT `Student1_Id`, `Student2_Id` FROM `friendlist` WHERE `Student1_Id` = \"" + id + "\" OR `Student2_Id` = \"" + id + "\" AND `isFriend` = 1";
-			System.out.println(query);
+			query = "SELECT `Student1_Id`, `Student2_Id` FROM `friendlist` WHERE (`Student1_Id` = \"" + id + "\" OR `Student2_Id` = \"" + id + "\") AND `isFriend` = 1";
 		}
 		else return "keine Freunde";
 		rs = stmt.executeQuery(query);
@@ -249,10 +244,13 @@ public class DbController {
 		{		
 			if(id.equals(rs.getString("Student1_Id"))) ids.add(rs.getString("Student2_Id"));
 			else ids.add(rs.getString("Student1_id"));
-		}
-		erstelleBekommeFreundeQuery(ids);		
-		rs = stmt.executeQuery(query);		
-		String freunde = vorbereitenStudentenListe();
+		}		
+		if(ids.stream().count() != 0)
+		{
+			erstelleBekommeFreundeQuery(ids);
+			rs = stmt.executeQuery(query);
+			freunde = vorbereitenStudentenListe();
+		}		
 		stmt.close();
 		connec.close();
 		return freunde;
@@ -266,8 +264,7 @@ public class DbController {
 			query = query.concat("`id` = \"" + ids.get(i) + "\"");
 			query = query.concat(" OR ");			
 		}
-		query = query.substring(0, query.length()-4);
-		System.out.println(query);
+		query = query.substring(0, query.length()-4);		
 	}
 
 
