@@ -104,18 +104,19 @@ public class DbController {
 	private String vorbereitenStudentenListe() throws SQLException
 	{
 		String studenten = "[";
-		while (rs.next()) {
+		while(rs.next())
+		{
 			studenten = studenten.concat("{");
 			studenten = studenten.concat("\"name\":");
 			studenten = studenten.concat("\"" + rs.getString("name") + "\",");
 			studenten = studenten.concat("\"surname\":");
-			studenten = studenten.concat("\"" + rs.getString("surname") + "\",");
+			studenten = studenten.concat("\"" + rs.getString("surname")+ "\",");
 			studenten = studenten.concat("\"courseID\":");
-			studenten = studenten.concat("\"" + rs.getString("courseID") + "\"");
-			studenten = studenten.concat("},");
+			studenten = studenten.concat("\"" + rs.getString("courseID")+ "\"");
+			studenten = studenten.concat("},");			
 		}
-		studenten = studenten.substring(0, studenten.length() - 1);
-		studenten = studenten.concat("]");
+		studenten = studenten.substring(0, studenten.length()-1);
+		studenten = studenten.concat("]");		
 		System.out.println(studenten);
 		return studenten;
 	}
@@ -238,32 +239,19 @@ public class DbController {
 		if(rs.next())
 		{
 			id = rs.getString("id");
-			query = "SELECT `Student1_Id`, `Student2_Id` FROM `friendlist` WHERE `Student1_Id` = \"" + id + "\" AND `isFriend` = 1" +
-					" OR `Student2_Id` = \"" + id + "\" AND `isFriend` = 1";
-
+			query = "SELECT `Student1_Id`, `Student2_Id` FROM `friendlist` WHERE `Student1_Id` = \"" + id + "\" OR `Student2_Id` = \"" + id + "\" AND `isFriend` = 1";
 			System.out.println(query);
-			System.out.println(id);
 		}
 		else return "keine Freunde";
 		rs = stmt.executeQuery(query);
-
-		System.out.println(" RS NEXT:" + rs.next());
-
 		List<String> ids = new ArrayList<String>();
 		while(rs.next())
 		{		
 			if(id.equals(rs.getString("Student1_Id"))) ids.add(rs.getString("Student2_Id"));
 			else ids.add(rs.getString("Student1_id"));
-
-			System.out.println("While(rs.next() - ids: " + ids.stream().count());
 		}
-		//leere liste -> ignorieren, da sonst query ausgeführt wird
-		if(ids.stream().count() != 0) {
-			erstelleBekommeFreundeQuery(ids);
-			rs = stmt.executeQuery(query);
-		}
-		System.out.println(" RS NEXT:" + rs.next());
-
+		erstelleBekommeFreundeQuery(ids);		
+		rs = stmt.executeQuery(query);		
 		String freunde = vorbereitenStudentenListe();
 		stmt.close();
 		connec.close();
@@ -276,7 +264,7 @@ public class DbController {
 		for(int i=0; i < ids.size(); i++)
 		{
 			query = query.concat("`id` = \"" + ids.get(i) + "\"");
-			query = query.concat(" OR ");
+			query = query.concat(" OR ");			
 		}
 		query = query.substring(0, query.length()-4);
 		System.out.println(query);
