@@ -1,21 +1,8 @@
 package main;
 
-import java.awt.*;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.http.auth.AuthenticationException;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -32,7 +19,8 @@ public class Main {
 		          .singletonMap("server.port", "8083"));
 		        app.run(args);
 
-		test("http://localhost:8083/heartbeat","Alex", "passwort1!");
+	//TEST Stuff?	        
+/*		test("http://localhost:8083/heartbeat","Alex", "passwort1!");
 		test("http://localhost:8083/heartbeat","Sven", "MothersMaidenName");
 		test("http://localhost:8083/add/Alex","Sven", "MothersMaidenName");
 		test("http://localhost:8083/add/Sven","Sven", "MothersMaidenName");
@@ -49,14 +37,14 @@ public class Main {
 		Runtime rt = Runtime.getRuntime();
 		String url = test("http://localhost:8083/url","Alex", "passwort1!");
 		rt.exec("open " + url);
-		}
+		} */
 		// open BBB on mac
 
 	}
 
 	// Tests
 	// This function is the BBB interface -> pass url and user credentials and server will take it from there
-	static String test(String urlString, String username, String password)
+/*	static String test(String urlString, String username, String password)
 	{
 		CloseableHttpClient client = HttpClients.createDefault();
 		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(username, password);
@@ -75,6 +63,6 @@ public class Main {
 		catch (ClientProtocolException e) {System.out.println(e);}
 		catch (IOException e) {System.out.println(e);}
 		return "";
-	}
+	} */
 
 }

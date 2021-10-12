@@ -1,32 +1,30 @@
 package models;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class Room {
 
     public int roomNo;
     public String urlString;
-    public ArrayList<Connection> active;
-    public ArrayList<Connection> pending;
+    public ArrayList<ConnectionModel> active;
+    public ArrayList<ConnectionModel> pending;
 
     public Room(String stringUrl, int roomNo) {
         this.roomNo = roomNo;
         this.urlString = stringUrl;
-        this.active = new ArrayList<Connection>();
-        this.pending = new ArrayList<Connection>();
+        this.active = new ArrayList<ConnectionModel>();
+        this.pending = new ArrayList<ConnectionModel>();
 
         // TODO URLConnection conn = url.openConnection(); bei Dennis
     }
 
-    public void addActive(Connection conn){this.active.add(conn);}
-    public void addPending(Connection conn){this.pending.add(conn);}
+    public void addActive(ConnectionModel conn){this.active.add(conn);}
+    public void addPending(ConnectionModel conn){this.pending.add(conn);}
     public void clearRoom(){this.active.clear();this.pending.clear();}
     public int getRoomNo(){return this.roomNo;}
     public Boolean isEmpty(){return this.active.isEmpty() && this.pending.isEmpty();}
 
-    public Boolean checkRooms(Connection conn)
+    public Boolean checkRooms(ConnectionModel conn)
     {
         if (active.contains(conn) || pending.contains(conn)){
             return true;
@@ -34,7 +32,7 @@ public class Room {
         return false;
     }
 
-    public void dropConn(Connection conn)
+    public void dropConn(ConnectionModel conn)
     {
         this.active.remove(conn);
         this.pending.remove(conn);

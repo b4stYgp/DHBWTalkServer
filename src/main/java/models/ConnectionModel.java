@@ -1,9 +1,8 @@
 package models;
 import java.util.Date;
-import java.util.Objects;
 
 
-public class Connection {
+public class ConnectionModel {
 
   private String id;
   private Date timestamp;
@@ -11,7 +10,7 @@ public class Connection {
   private Room room;
   public String username;
 
-  public Connection(String id, String username)
+  public ConnectionModel(String id, String username)
   {
     this.id = id;
     this.timestamp = new Date();

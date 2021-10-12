@@ -1,6 +1,6 @@
 package controller;
 
-import models.Connection;
+import models.ConnectionModel;
 import models.Room;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +13,7 @@ import java.util.*;
 class ConnectionController {
 
   Boolean VERBOSE = true;
-  List<Connection> listConnection = new ArrayList<Connection>();
+  List<ConnectionModel> listConnection = new ArrayList<ConnectionModel>();
   List<Room> listRoom = new ArrayList<Room>(){{
     add(new Room("https://bbb.dhbw-heidenheim.de/?M=xzNW8jI0M2U3Mu862pnC", 0));
     add(new Room("https://bbb.dhbw-heidenheim.de/?M=eBtgjI0NDNlMushX31Zj", 1));
@@ -28,10 +28,10 @@ class ConnectionController {
       public void run() {
         if (!listConnection.isEmpty())
         {
-          Iterator<Connection> connectionIterator = listConnection.iterator();
+          Iterator<ConnectionModel> connectionIterator = listConnection.iterator();
           while (connectionIterator.hasNext())
           {
-            Connection conn = connectionIterator.next();
+            ConnectionModel conn = connectionIterator.next();
             if (new Date().getTime() - conn.getTimestamp().getTime() >= 1000000)
             {
               System.out.println("User timed out: " + conn);
@@ -48,13 +48,13 @@ class ConnectionController {
     }, 0, 1000000);}
 
   @GetMapping("/heartbeat")
-  public Connection updateConnection(@RequestHeader("username") String username,
+  public ConnectionModel updateConnection(@RequestHeader("username") String username,
                                      @RequestHeader("authorization") String id)
   {
 
     // TODO check if user exists
 
-    for(Connection conn : listConnection)
+    for(ConnectionModel conn : listConnection)
     {
       if (Objects.equals(conn.getId(), id))
       {
@@ -63,7 +63,7 @@ class ConnectionController {
         return conn;
       }
     }
-    Connection newConnection = new Connection(id, username);
+    ConnectionModel newConnection = new ConnectionModel(id, username);
     listConnection.add(newConnection);
     
     if(VERBOSE){System.out.println("\n/heartbeat: created " + username);}
@@ -75,7 +75,7 @@ class ConnectionController {
   public String checkPending(@RequestHeader("username") String requestingUser,
                              @RequestHeader("authorization") String id)
   {
-    Connection checkingConn = listConnection.stream()
+    ConnectionModel checkingConn = listConnection.stream()
             .filter(conn -> requestingUser.equals(conn.getUsername()))
             .findAny()
             .orElse(null);
@@ -99,7 +99,7 @@ class ConnectionController {
   public String getURL(@RequestHeader("username") String username,
                               @RequestHeader("authorization") String id)
   {
-    Connection askingConn = listConnection.stream()
+    ConnectionModel askingConn = listConnection.stream()
             .filter(conn -> username.equals(conn.getUsername()))
             .findAny()
             .orElse(null);
@@ -108,14 +108,14 @@ class ConnectionController {
 
 
   @GetMapping("/leave")
-  public Connection leaveRoom(@RequestHeader("username") String username,
+  public ConnectionModel leaveRoom(@RequestHeader("username") String username,
                        @RequestHeader("authorization") String id)
   {
-    Connection leavingCon = listConnection.stream()
+    ConnectionModel leavingCon = listConnection.stream()
             .filter(conn -> username.equals(conn.getUsername()))
             .findAny()
             .orElse(null);
-    leavingCon = new Connection(id, username);
+    leavingCon = new ConnectionModel(id, username);
     return leavingCon;
   }
 
@@ -124,7 +124,7 @@ class ConnectionController {
                        @RequestHeader("authorization") String id,
                        @PathVariable("roomNo") int roomNo)
   {
-    Connection joiningConn = listConnection.stream()
+    ConnectionModel joiningConn = listConnection.stream()
             .filter(conn -> requestingUser.equals(conn.getUsername()))
             .findAny()
             .orElse(null);
@@ -144,7 +144,7 @@ class ConnectionController {
   {
     String infoString = "";
     for(Room room:listRoom){infoString += room+"\n";}
-    for(Connection conn:listConnection){infoString += conn+"\n";}
+    for(ConnectionModel conn:listConnection){infoString += conn+"\n";}
 
     if(VERBOSE){System.out.println("/info\n" + infoString);}
 
@@ -162,12 +162,12 @@ class ConnectionController {
       return;
     }
 
-    Connection requestingConn = listConnection.stream()
+    ConnectionModel requestingConn = listConnection.stream()
             .filter(conn -> requestingUser.equals(conn.getUsername()))
             .findAny()
             .orElse(null);
 
-    Connection acceptingConn = listConnection.stream()
+    ConnectionModel acceptingConn = listConnection.stream()
             .filter(conn -> acceptingUser.equals(conn.getUsername()))
             .findAny()
             .orElse(null);
