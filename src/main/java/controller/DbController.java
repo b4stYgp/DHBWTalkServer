@@ -202,17 +202,20 @@ public class DbController {
 		{
 			studentenIds.add(rs.getString("Student1_Id"));
 		}
-		
-		query = "SELECT `name`, `surname`, `courseID` FROM `student` WHERE ";
-		
-		for(int i=0; i < studentenIds.size();i++)
+		if(!studentenIds.isEmpty())
 		{
-			query = query.concat("`id` = "+ studentenIds.get(i));
-			query = query.concat(" OR ");
+			query = "SELECT `name`, `surname`, `courseID` FROM `student` WHERE ";
+			
+			for(int i=0; i < studentenIds.size();i++)
+			{
+				query = query.concat("`id` = "+ studentenIds.get(i));
+				query = query.concat(" OR ");
+			}
+			query = query.substring(0, query.length()-4);		
+			rs = stmt.executeQuery(query);
+			return vorbereitenStudentenListe();	
 		}
-		query = query.substring(0, query.length()-4);		
-		rs = stmt.executeQuery(query);
-		return vorbereitenStudentenListe();		
+		return "";		
 	}
 
 
