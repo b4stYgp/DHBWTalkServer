@@ -5,7 +5,7 @@ public class Student {
 	private String surname;
 	private String courseID;
 	private String gender;
-	private String id;
+	private String matrikelnummer;
 	private String passwort;
 	
 	
@@ -41,12 +41,12 @@ public class Student {
 		this.gender = gender;
 	}
 	
-	public String getId() {
-		return id;
+	public String getMatrikelnummer() {
+		return matrikelnummer;
 	}
 	
-	public void setId(String id) {
-		this.id = id;
+	public void setMatrikelnummer(String matrikelnummer) {
+		this.matrikelnummer = matrikelnummer;
 	}
 
 	public String getPasswort() {

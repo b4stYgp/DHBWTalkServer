@@ -6,10 +6,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import models.FreundesAnfrage;
+import models.Freund;
 import models.Student;
 
 @RestController
@@ -17,16 +18,18 @@ import models.Student;
 public class Controller {
 	
 	@PostMapping("/")
-	public String registriereStudent(@RequestBody Student student) throws ClassNotFoundException, SQLException
+	public String registriereStudent(@RequestHeader("matrikelnummer") String matrikelnummer, @RequestHeader("authorization") String passwort, @RequestBody Student student) throws ClassNotFoundException, SQLException
 	{
-		DbController dbController = new DbController();		
+		DbController dbController = new DbController();
+		student.setMatrikelnummer(matrikelnummer);		
+		student.setPasswort(passwort);				
 		return dbController.registriereStudent(student) ? "Student angelegt" : "Student abgewiesen";
 	}
 	
-	@GetMapping("/{matrikelnummer}/{passwort}")
-	public String anmeldenStudent(@PathVariable ("matrikelnummer") String matrikelnummer, @PathVariable ("passwort") String passwort) throws ClassNotFoundException, SQLException
+	@GetMapping("/")
+	public String anmeldenStudent(@RequestHeader("matrikelnummer") String matrikelnummer, @RequestHeader("authorization") String passwort) throws ClassNotFoundException, SQLException
 	{
-		DbController dbController = new DbController();
+		DbController dbController = new DbController();		
 		return dbController.anmelden(matrikelnummer, passwort);
 	}
 	
@@ -40,7 +43,7 @@ public class Controller {
 
 	
 	@PostMapping("/{matrikelnummer}/freunde")
-	public String anfrageFreundschaft(@RequestBody FreundesAnfrage anfrage,  @PathVariable("matrikelnummer") String matrikelnummer ) throws ClassNotFoundException, SQLException
+	public String anfrageFreundschaft(@RequestBody Freund anfrage,  @PathVariable("matrikelnummer") String matrikelnummer ) throws ClassNotFoundException, SQLException
 	{
 		DbController dbController = new DbController();		
 		return dbController.anfrageFreundschaft(anfrage, matrikelnummer) ? "Freundesanfrage gesendet" : "Freundschaftsanfrage abgelehnt";	
@@ -63,7 +66,7 @@ public class Controller {
 	
 
 	@PutMapping("/{matrikelnummer}/freunde")
-	public String bestaetigeFreundschaftsAnfrage(@RequestBody FreundesAnfrage anfrage, @PathVariable("matrikelnummer") String matrikelnummer) throws ClassNotFoundException, SQLException
+	public String bestaetigeFreundschaftsAnfrage(@RequestBody Freund anfrage, @PathVariable("matrikelnummer") String matrikelnummer) throws ClassNotFoundException, SQLException
 	{
 		DbController dbController = new DbController();
 		return dbController.bestaetigeFreundschaftsAnfrage(anfrage, matrikelnummer) ? "Freundschaft bestaetigt" : "Freundschaft abegelehnt" ;		

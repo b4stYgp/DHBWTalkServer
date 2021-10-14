@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.FreundesAnfrage;
+import models.Freund;
 import models.Student;
 
 public class DbController {
@@ -40,7 +40,7 @@ public class DbController {
 				+ "','" + student.getSurname() 
 				+ "','" + student.getGender() 
 				+ "','" + student.getCourseID() 
-				+ "','" + student.getId()
+				+ "','" + korrigierePasswortString(student.getMatrikelnummer())
 				+ "','" + student.getPasswort()
 				+ "')";
 		stmt = connec.createStatement();
@@ -53,17 +53,22 @@ public class DbController {
 	
 	public String anmelden(String matrikelnummer, String passwort) throws ClassNotFoundException, SQLException
 	{
-		query = "SELECT `id` FROM `student` WHERE `matrikelnummer` = \"" + matrikelnummer + "\" AND `passwort` = \"" + passwort + "\"";
+		query = "SELECT `id` FROM `student` WHERE `matrikelnummer` = \"" + matrikelnummer + "\" AND `passwort` = \"" + korrigierePasswortString(passwort) + "\"";
 		baueVerbindung();
 		stmt = connec.createStatement();
 		rs = stmt.executeQuery(query);
 		if(rs.next()) return "true";
 		else return "false";
 	}
+	
+	private String korrigierePasswortString(String passwort) {
+		String korrigiertesPasswort = passwort.substring(5,passwort.length());
+		return korrigiertesPasswort;
+	}
 
 	public String bekommeStudenten(String name, String surname, String courseID) throws ClassNotFoundException, SQLException {		
 		baueVerbindung();
-		FreundesAnfrage anfrage = new FreundesAnfrage(name, surname, courseID);
+		Freund anfrage = new Freund(name, surname, courseID);
 		vorbereitenFreundesQuery(anfrage);
 		stmt = connec.createStatement();
 		rs = stmt.executeQuery(query);
@@ -74,7 +79,7 @@ public class DbController {
 		return studentenJSON;
 	}
 	
-	private void vorbereitenFreundesQuery(FreundesAnfrage anfrage)
+	private void vorbereitenFreundesQuery(Freund anfrage)
 	{
 		boolean hatVorgaenger = false;
 		query = "SELECT `id`, `name`, `surname`, `gender`, `courseID`, `matrikelnummer` FROM `student` WHERE ";
@@ -96,6 +101,12 @@ public class DbController {
 		case "null" : break;
 		default : if(hatVorgaenger) {query = query.concat(" AND ");} query = query.concat("`courseID` = \"" + anfrage.getCourseID() + "\""); break;
 		}		
+		
+		switch(anfrage.getMatrikelnummer())
+		{
+		case "null" : break;
+		default : if(hatVorgaenger) {query = query.concat(" AND ");} query = query.concat("`matrikelnummer` = \"" + anfrage.getMatrikelnummer() + "\""); break;
+		}		
 	}
 	
 	private String vorbereitenStudentenListe() throws SQLException
@@ -110,6 +121,8 @@ public class DbController {
 			studenten = studenten.concat("\"" + rs.getString("surname")+ "\",");
 			studenten = studenten.concat("\"courseID\":");
 			studenten = studenten.concat("\"" + rs.getString("courseID")+ "\"");
+			studenten = studenten.concat("\"matrikelnummer\":");
+			studenten = studenten.concat("\"" + rs.getString("matrikelnummer")+ "\"");
 			studenten = studenten.concat("},");			
 		}
 		studenten = studenten.substring(0, studenten.length()-1);
@@ -118,7 +131,7 @@ public class DbController {
 	}
 
 	
-	public boolean anfrageFreundschaft(FreundesAnfrage anfrage, String matrikelnummer) throws ClassNotFoundException, SQLException {
+	public boolean anfrageFreundschaft(Freund anfrage, String matrikelnummer) throws ClassNotFoundException, SQLException {
 		baueVerbindung();
 		vorbereitenFreundesQuery(anfrage);
 		stmt = connec.createStatement();
@@ -203,7 +216,7 @@ public class DbController {
 	}
 
 
-	public boolean bestaetigeFreundschaftsAnfrage(FreundesAnfrage anfrage, String matrikelnummer) throws ClassNotFoundException, SQLException {
+	public boolean bestaetigeFreundschaftsAnfrage(Freund anfrage, String matrikelnummer) throws ClassNotFoundException, SQLException {
 		query = "UPDATE `friendlist` SET `isFriend`= 1 WHERE `Student2_Id` = (SELECT `id` FROM `student` WHERE `matrikelnummer` = \"" + matrikelnummer + "\""
 				+ ") AND `Student1_Id` = (SELECT `id` FROM `student` WHERE `name` = \"" + anfrage.getName() + "\""
 				+ " AND `surname` = \"" + anfrage.getSurname() + "\"  AND `courseID` = \"" + anfrage.getCourseID() + "\")";
@@ -213,17 +226,6 @@ public class DbController {
 		if(reihen == 1)return true;
 		else return false;
 	}
-
-
-	public boolean login(String matrikelnummer, String passwort) throws ClassNotFoundException, SQLException {
-		query = "SELECT `matrikelnummer` FROM `student` WHERE `matrikelnummer` = \"" + matrikelnummer + "\" AND `passwort` \"" + passwort + "\"" ;
-		baueVerbindung();
-		stmt = connec.createStatement();
-		rs = stmt.executeQuery(query);
-		if(rs.next()) return true;
-		else return false;
-	}
-
 
 	public String bekommeFreunde(String matrikelnummer) throws ClassNotFoundException, SQLException {
 		query = "SELECT `id` FROM `student` WHERE `matrikelnummer` = \"" + matrikelnummer + "\"";
@@ -258,20 +260,12 @@ public class DbController {
 
 
 	private void erstelleBekommeFreundeQuery(List<String> ids) {
-		query = "SELECT `name`, `surname`, `courseID` FROM `student` WHERE ";
+		query = "SELECT `name`, `surname`, `courseID` , `matrikelnummer` FROM `student` WHERE ";
 		for(int i=0; i < ids.size(); i++)
 		{
 			query = query.concat("`id` = \"" + ids.get(i) + "\"");
 			query = query.concat(" OR ");			
 		}
 		query = query.substring(0, query.length()-4);		
-	}
-
-
-
-
-
-
-
-	 
+	}	 
 }
