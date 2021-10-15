@@ -1,13 +1,12 @@
 package models;
 
-public class Freund {
+public class Anfrage {
 	private String name;
 	private String surname;
 	private String courseID;
-	private String matrikelnummer = "";
 	
 	
-	public Freund(String name, String surname, String courseID)
+	public Anfrage(String name, String surname, String courseID)
 	{
 		setName(name);
 		setSurname(surname);
@@ -38,11 +37,4 @@ public class Freund {
 		this.courseID = courseID;
 	}
 
-	public String getMatrikelnummer() {
-		return matrikelnummer;
-	}
-
-	public void setMatrikelnummer(String matrikelnummer) {
-		this.matrikelnummer = matrikelnummer;
-	}
 }
