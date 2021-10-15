@@ -363,7 +363,7 @@ public class DbController {
 	/*
 	 * Parameter: String (matrikelnummer der Quelle)
 	 * Return: String im JSONFormat mit einer Liste and JSONObjekten für den Client
-	 * 		"[{"name":"testname","surname":"testnachname","courseID":"TINF18","matrikelnummer":"1234567"}]"
+	 * 		"[{"name":"testname","surname":"testnachname","courseID":"TINF18","matrikelnummer":"1234567"}]" oder ""
 	 */
 	public String bekommeFreunde(String matrikelnummerClient) throws ClassNotFoundException, SQLException {
 		query = "SELECT `id` FROM `student` WHERE `matrikelnummer` = \"" + matrikelnummerClient + "\"";
@@ -377,7 +377,7 @@ public class DbController {
 			id = rs.getString("id");		// Id des Clients gespeichert in id
 			query = "SELECT `Student1_Id`, `Student2_Id` FROM `friendlist` WHERE (`Student1_Id` = \"" + id + "\" OR `Student2_Id` = \"" + id + "\") AND `isFriend` = 1";
 		}
-		else return "";//"keine Freunde"; TODO Dennis fragen wegen verarbeitung der Rückgabe
+		else return freunde;
 		rs = stmt.executeQuery(query); 
 		List<String> ids = new ArrayList<String>();
 		while(rs.next()) 
