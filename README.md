@@ -1,36 +1,14 @@
 # DHBWTalkServer
-!!!!!NICHT AKUTELL!!!!!
-API für DHBW Talk Clients zur Abfrage gegen eine Datenbank (Standard Xampp)
+Einrichtungsanleitung der Datenbank
 
-Abfragen und Antworten der API
+Schritte zur Einrichtung:
 
-localhost ist der Platzhalter. Für den Fall, dass ein Server aufgesetzt wird muss die IP offensichtlich angepasst werden.
-Der Standard-Port ist 8080. Die Kommunikation findet per HTTP statt,
+1. xampp download und isntallieren: https://www.apachefriends.org/de/download.html
 
-Um einen neuen Studenten(User) zu registrieren:
-Post: http://localhost:8080/students/ Body(Student) -> 
-{"name":"Testname" , "surname":"TestNachname" , "gender":"Testgender" , "courseID":"TestKurs"} [Body muss komplett befüllt sein]
-Mögliche Antworten: "Student angelegt" oder "Student abgewiesen"
+2. Apache und MySQL starten
 
-Um potentielle Freunde anzufragen:
-Get: http://localhost:8080/students/{name}/{surname}/{courseID} kein Body
-{"name":"null" , "surname":"null" , "courseID":"TestKurs"} [Die Path Variable müssen alle befüllt sein, bei nicht Eintrag in GUI bei der suche müssen die nicht befülten Felder mit dem String "null" befüllt sein. (Beispiel /students/null/testNachname/null)]
-Beispiel Antwort: [{"name":"Testname" , "surname":"Testnachname" , "courseID":"TestKurs"},]
+3. Im Browser( http://localhost/phpmyadmin/index.php?route=/server/databases&server=1 ) bei Datenbankname "dhbwserver" eintragen und anlegen klicken
 
-Um eine Freundschaftsanfrage abzusenden:
-Post: http://localhost:8080/students/{matrikelnummer}/freunde Body(FreundesAnfrage(zu befreundender Student)) ->
-{"name":"Testname" , "surname":"TestNachname" , "courseID":"TestKurs"} [Body muss komplett befüllt sein die hierfür notwendigen Informationen sind aus der Antwort der "potentiellen Freunde anfrage" zu entnehmen]
-Mögliche Antworten: "Freundesanfrage gesendet" oder "Freundschaftsanfrage abgelehnt"
+4. Nun oben im Reiter auf SQL klicken und die dhbwserver.sql einfach in den Browser ziehen
 
-Um offene Freundschaftsanfragen abzufragen:
-Get: http://localhost:8080/students/{matrikelnummer}/offenefreunde kein Body
-Mögliche Antworten: [{"name":"Testname" , "surname":"Testnachname" , "courseID":"Testkurs"},]
-
-Um eine Freundschaft zu bestätigen:
-Put: http://localhost:8080/students/{matrikelnummer}/freunde Body(FreundesAnfrage(des zu bestätigenden Studenten)) ->
-{"name":"Testname" , "surname":"Testnachname" , "courseID":"Testkurs"} [Body muss komplett befüllt sein, die hierfür notwendigen Informationen sind aus der offenen Freundschaftsanfrage zu entnehmen]
-Mögliche Antworten: "Freundschaft bestaetigt" oder "Freundschaft abegelehnt"
-
-Um bestehende Freunde abzufragen:
-Get: http://localhost:8080/students/{matrikelnummer}/freunde kein Body
-Mögliche Antworten: "keine Freunde" oder [{"name":"Testname" , "surname":"TestNachname" , "courseID";"Testkurs"},]
+5. Seite refreshen - die Datenbank ist nun eingerichtet
